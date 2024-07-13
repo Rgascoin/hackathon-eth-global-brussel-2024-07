@@ -40,7 +40,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		const { key } = req.query;
 
 		if (!key || typeof key !== 'string') {
-			res.status(400).json({ error: 'Key is required and must be a string' });
+			const values = (await redisClient.keys('*')).filter((r) => r[0] === '0');
+			const applied = [];
+
+			for (const value of values) {
+				const retrived = await redisClient.get(value);
+				applied.push({ key: value, value: retrived });
+			}
+
+			res.status(200).json({ value: JSON.parse(JSON.stringify(applied)) });
 			return;
 		}
 

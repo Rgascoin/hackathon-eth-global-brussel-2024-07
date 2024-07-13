@@ -24,7 +24,7 @@ export const storeKey = async (key: string, value: any): Promise<StoreKeyRespons
 	}
 };
 
-export const getKey = async (key: string): Promise<GetKeyResponse> => {
+export const getKey = async (key?: string): Promise<GetKeyResponse> => {
 	try {
 		const response = await axios.get('/api/store-key', {
 			params: { key },

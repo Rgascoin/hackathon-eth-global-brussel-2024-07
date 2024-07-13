@@ -23,7 +23,7 @@ const GetWalletAddress = () => {
 	};
 
 	return (
-		<div className={'space-y-2'}>
+		<div className={'flex flex-col space-y-2'}>
 			<button onClick={scan}>Register Personal Address</button>
 			<button onClick={debug}>data: {redisData}</button>
 		</div>

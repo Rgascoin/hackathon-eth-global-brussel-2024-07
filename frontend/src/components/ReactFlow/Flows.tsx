@@ -1,8 +1,10 @@
 import { ChainConfig, Sdk, SdkContractRunner } from '@circles-sdk/sdk';
-import { BrowserProvider, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
 import { useWeb3Context } from '@/contexts/WalletContext';
+import useWristBand from '@/hooks/useWristBand';
+import { getKey } from '@/utils/api-redis';
 
 const chainConfig: ChainConfig = {
 	circlesRpcUrl: 'https://chiado-rpc.aboutcircles.com',
@@ -14,8 +16,12 @@ const chainConfig: ChainConfig = {
 function Flows() {
 	const { web3Service, account, isLogged } = useWeb3Context();
 
-	const [sdk, setSDK] = useState<any>('none');
+	const [sdk, setSDK] = useState<any>(undefined);
 	const [myAvatar, setMyAvatar] = useState<any>('none');
+	const [myRelation, setMyRelation] = useState<any>('none');
+
+	const { callWristband } = useWristBand();
+	const [debug, setDebug] = useState<any>();
 
 	async function getRunner(): Promise<SdkContractRunner> {
 		const web3authProvider = web3Service.web3;
@@ -38,28 +44,53 @@ function Flows() {
 		if (!account || !sdk) return;
 
 		const avatar = await sdk.getAvatar(account.value);
+		const relation = await avatar.getTrustRelations();
 		setMyAvatar(avatar);
-		console.log(avatar.avatarInfo);
+		setMyRelation(relation);
+		return avatar;
 	};
 
 	async function getSdk() {
 		const runner = await getRunner();
 		const newSDK = new Sdk(chainConfig, runner);
-		setSDK(newSDK);
+
+		if (newSDK) setSDK(newSDK);
 	}
 
-	useEffect(() => {
-		if (!account || !isLogged || !web3Service || !web3Service.web3) return;
+	const scan = async () => {
+		const res = await callWristband('get_pkeys');
+		const allWristband = await getKey(); // wristBandAddress === res.etherAddresses['1']
 
+		const userWristband = (allWristband.value as any[]).find(
+			(w: any) => JSON.parse(w.value).wristBandAddress == res.etherAddresses['1'],
+		).key;
+
+		const userAvatar = await fetchMyAvatar();
+		const trustedRes = await userAvatar.trust(userWristband);
+		await fetchMyAvatar();
+		setDebug(userWristband);
+	};
+
+	useEffect(() => {
+		if (!account.value || !isLogged || !web3Service || !web3Service.web3) return;
 		getSdk();
-	}, [account, isLogged, web3Service]);
+	}, [account, isLogged, web3Service?.web3]);
 
 	return (
-		<div className="flex size-full flex-col bg-red-500">
-			<button onClick={getRunner}>GetRunner</button>
-			<button onClick={registerNewAvatar}>CreateAvatar</button>
-			<button onClick={fetchMyAvatar}>FetchAvatar</button>
-			<button onClick={registerNewAvatar}>my avatar: {myAvatar.address}</button>
+		<div className="flex size-full flex-col gap-12 bg-red-500">
+			<button className="bg-blue-600" onClick={registerNewAvatar} disabled={!sdk}>
+				CreateAvatar
+			</button>
+			<button className="bg-blue-600" onClick={fetchMyAvatar} disabled={!sdk}>
+				FetchAvatar
+			</button>
+			<button className="bg-blue-600">my avatar: {myAvatar.address}</button>
+			<button className="bg-blue-600">my relation: {JSON.stringify(myRelation)}</button>
+
+			<button className="bg-blue-600" onClick={scan}>
+				Link To someone
+			</button>
+			<button className="bg-blue-600">gg {JSON.stringify(debug)}</button>
 			{/* {JSON.stringify(sdk)} */}
 		</div>
 	);
