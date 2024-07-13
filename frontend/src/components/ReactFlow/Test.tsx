@@ -81,7 +81,13 @@ export default function Test() {
 					</ReactFlow>
 				</ReactFlowProvider>
 			</div>
-			<div className="absolute bottom-2 right-2 z-10 rounded-lg bg-blue-400 p-2">ok</div>
+			<div className="absolute bottom-2 right-2 z-10 flex flex-col items-center">
+				<button onClick={() => {}} className="flex items-center justify-center p-px">
+					<div className="m-px flex size-full items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-purple-500 p-2 text-sm italic text-white hover:from-purple-500 hover:to-orange-500">
+						+
+					</div>
+				</button>
+			</div>
 		</div>
 	);
 }
