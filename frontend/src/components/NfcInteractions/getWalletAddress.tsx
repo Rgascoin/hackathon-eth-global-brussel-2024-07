@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 import { useWeb3Context } from '@/contexts/WalletContext';
 import useWristBand from '@/hooks/useWristBand';
@@ -7,7 +7,7 @@ import { getKey, storeKey } from '@/utils/api-redis';
 const GetWalletAddress = () => {
 	const { account } = useWeb3Context();
 	const { callWristband } = useWristBand();
-	const [redisData, setRedisData] = useState<string>('none');
+	const [redisData, setRedisData] = useState<string | undefined>(undefined);
 
 	const scan = async () => {
 		const res = await callWristband('get_pkeys');
@@ -17,15 +17,26 @@ const GetWalletAddress = () => {
 		else await storeKey(account.value, { wristBandAddress: res.etherAddresses['1'] });
 	};
 
-	const debug = async () => {
-		const res = await getKey(account.value);
-		setRedisData(JSON.stringify(res.value));
-	};
+	const setKey = async () => {
+		const personalStorage = await getKey(account.value);
+		const data = personalStorage.value.wristBandAddress;
+		setRedisData(`${data.slice(0, 6)}...${data.slice(-4)}`)
+	}
+
+	useEffect(() => {
+		if (!account.value || !redisData) return;
+		setKey();
+	}, [account, redisData])
+
 
 	return (
-		<div className={'flex flex-col space-y-2'}>
-			<button onClick={scan}>Register Personal Address</button>
-			<button onClick={debug}>data: {redisData}</button>
+		<div className={'p-3'}>
+		{account.value ? <div className={'flex flex-col space-y-2 text-center'}>
+			{!redisData ? <button onClick={scan}>Register Personal Address</button> :
+				<button onClick={scan}>your wristband: {redisData}</button>}
+
+		</div> : <></>}
+
 		</div>
 	);
 };

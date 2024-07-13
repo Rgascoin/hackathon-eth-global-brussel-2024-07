@@ -11,11 +11,15 @@ function Header() {
 
 	return (
 		<div className="mx-2 flex flex-1 border-b border-grey">
-			<div className=" flex items-center border border-grey text-xl font-bold">BraceBuddy</div>
+			<div className=" flex items-center border border-grey text-xl font-bold">
+				<div className=" flex flex-1 flex-col justify-center ">
+				BraceBuddy
+					<p className="text-xs text-secondGrey">
+					{`${account.value.slice(0, 6)}...${account.value.slice(-4)}`}
+				</p>
+			</div>
 
-			<div className=" flex flex-1 flex-col justify-center ">
 				<div className="flex  ">
-					<p className="text-xs text-secondGrey">Hi, {account.value}</p>
 				</div>
 			</div>
 			<div className="m-2 flex max-h-24 flex-1 overflow-y-auto ">
