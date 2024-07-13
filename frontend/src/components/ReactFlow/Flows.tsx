@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import CreateNewAccount from '@/components/ReactFlow/CreateNewAccount';
-import SendToSomeone from '@/components/ReactFlow/sendToSomeon';
-import TrustSomeone from '@/components/ReactFlow/TrustSomeon';
 import { useWeb3Context } from '@/contexts/WalletContext';
+import Test from "@/components/ReactFlow/Test";
+
+
 
 function Flows() {
 	const { account, circlesSdk } = useWeb3Context();
@@ -16,11 +17,18 @@ function Flows() {
 		if (!account.value || !circlesSdk) return undefined;
 
 		const avatar = await circlesSdk.getAvatar(account.value);
-		const relation = await avatar.getTrustRelations();
+		const relations = await avatar.getTrustRelations();
 		const balance = await avatar.getTotalBalance();
 
+		const relationsWithBalances = [];
+		for (const relation of relations) {
+			const relationAvatarAddress = relations.subjectAvatar === avatar.address ? relation.subjectAvatar : relation.objectAvatar
+			const relationAvatar = await circlesSdk.getAvatar(relationAvatarAddress);
+			const relationBalance = await relationAvatar.getTotalBalance();
+			relationsWithBalances.push({...relation, balance: relationBalance})
+		}
 		setMyAvatar(avatar);
-		setMyRelation(relation);
+		setMyRelation(relationsWithBalances);
 		setMyBalance(balance);
 		return avatar;
 	};
@@ -37,20 +45,12 @@ function Flows() {
 	}, [account.value, circlesSdk, fetchMyAvatar]);
 
 	return (
-		<div className="flex size-full flex-col gap-12 bg-red-500">
+		<div className="flex size-full flex-col gap-12">
 			{account.value ? (
 				<>
 					{myAvatar?.address ? (
-						<div className={'flex flex-col gap-12'}>
-							<button className="bg-blue-600" onClick={fetchMyAvatar}>
-								my avatar: {myAvatar?.address} (${myBalance})
-							</button>
-
-							<TrustSomeone myAvatar={myAvatar} />
-							<SendToSomeone myAvatar={myAvatar} />
-							<text className="bg-blue-600">Number of relation: {JSON.stringify(myRelation)}</text>
-
-							{/* PUT REACT FLOW HERE */}
+						<div className={'flex w-full flex-1 flex-col gap-12'}>
+							<Test masterNode={myAvatar} masterNodeBalance={myBalance} relatedAvatars={myRelation} />
 						</div>
 					) : (
 						<div>

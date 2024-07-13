@@ -14,7 +14,7 @@ function Dashboard() {
 
 			<div className="flex flex-[3_2_0%] flex-col ">
 				<div className="flex flex-[5_2_0%] ">
-					<div className="flex-1 bg-blue-400">
+					<div className="flex flex-1 ">
 						{/* Flows view */}
 						<Flows />
 					</div>
