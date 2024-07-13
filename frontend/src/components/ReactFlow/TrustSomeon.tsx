@@ -27,7 +27,7 @@ const TrustSomeone: FC<TrustSomeoneProps> = ({ myAvatar }) => {
 	return (
 		<button onClick={addSomeone} className="flex items-center justify-center p-px">
 			<div
-				className="m-px flex size-full items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-purple-500 p-2 text-sm italic text-white hover:from-purple-500 hover:to-orange-500">
+				className="m-px flex size-full items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-purple-500 p-4 text-sm italic text-white hover:from-purple-500 hover:to-orange-500">
 				+
 			</div>
 		</button>
