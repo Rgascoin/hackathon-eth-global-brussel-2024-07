@@ -19,12 +19,13 @@ const GetWalletAddress = () => {
 
 	const setKey = async () => {
 		const personalStorage = await getKey(account.value);
+		alert(personalStorage)
 		const data = personalStorage.value.wristBandAddress;
 		setRedisData(`${data.slice(0, 6)}...${data.slice(-4)}`)
 	}
 
 	useEffect(() => {
-		if (!account.value || !redisData) return;
+		if (!account.value || !!redisData) return;
 		setKey();
 	}, [account, redisData])
 
