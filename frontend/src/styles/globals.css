@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'BerkeleyMono';
+  src: url('/fonts/BerkeleyMono-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BerkeleyMono';
+  src: url('/fonts/BerkeleyMono-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BerkeleyMono';
+  src: url('/fonts/BerkeleyMono-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BerkeleyMono';
+  src: url('/fonts/BerkeleyMono-BoldItalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+
+@keyframes slide {
+  from {
+    left: 0;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.tab-bar {
+  position: relative;
+  height: 4px;
+  background: linear-gradient(to right, #ef7219, #773e8a);
+  transition: transform 0.3s ease;
+}
