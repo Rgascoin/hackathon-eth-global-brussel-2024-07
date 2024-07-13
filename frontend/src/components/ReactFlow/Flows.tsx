@@ -18,6 +18,7 @@ function Flows() {
 	const fetchMyAvatar = async (): Promise<any> => {
 		if (!account.value || !circlesSdk) return undefined;
 
+		try {
 		const avatar = await circlesSdk.getAvatar(account.value);
 		const relations = await avatar.getTrustRelations();
 		const balance = await avatar.getTotalBalance();
@@ -37,6 +38,7 @@ function Flows() {
 		setMyRelation(relationsWithBalances);
 		setMyBalance(balance);
 		return avatar;
+			} catch {return undefined}
 	};
 
 	// FETCH AVATAR EVERY X SECONDS (actualize on successful transaction)
@@ -60,8 +62,8 @@ function Flows() {
 							<Test masterNode={myAvatar} masterNodeBalance={myBalance} relatedAvatars={myRelation} />
 						</div>
 					) : (
-						<div>
-							<CreateNewAccount haveAccount={!!myAvatar} />
+						<div className={'w-full'}>
+							<CreateNewAccount haveAccount={!!myAvatar.address} />
 						</div>
 					)}
 				</>

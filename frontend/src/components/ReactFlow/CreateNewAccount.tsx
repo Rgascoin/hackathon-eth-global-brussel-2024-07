@@ -20,15 +20,15 @@ const CreateNewAccount: FC<CreateNewAccountProps> = ({ haveAccount }) => {
 
 	if (haveAccount) return null;
 	return (
-		<>
+		<div className={'flex justify-center'}>
 			{isLoading ? (
 				<button className="animate-pulse bg-blue-600">Loading...</button>
 			) : (
-				<button onClick={registerNewAvatar} className="bg-blue-600">
+				<button onClick={registerNewAvatar} className="rounded-lg bg-grey p-2 transition-all duration-150 ease-in-out hover:bg-secondGrey">
 					Create new Account
 				</button>
 			)}
-		</>
+		</div>
 	);
 };
 
