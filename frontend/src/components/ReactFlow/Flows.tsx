@@ -14,9 +14,11 @@ function Flows() {
 
 	const fetchMyAvatar = async (): Promise<any> => {
 		if (!account.value || !circlesSdk) return undefined;
+
 		const avatar = await circlesSdk.getAvatar(account.value);
 		const relation = await avatar.getTrustRelations();
 		const balance = await avatar.getTotalBalance();
+
 		setMyAvatar(avatar);
 		setMyRelation(relation);
 		setMyBalance(balance);
@@ -27,7 +29,10 @@ function Flows() {
 	useEffect(() => {
 		if (!circlesSdk || !account.value || account.value.length < 16) return undefined;
 
-		const interval = setInterval(async () => fetchMyAvatar(), 6000);
+		const interval = setInterval(async () => {
+			if (!circlesSdk || !account.value || account.value.length < 16) return undefined;
+			fetchMyAvatar();
+		}, 6000);
 		return () => clearInterval(interval);
 	}, [account.value, circlesSdk, fetchMyAvatar]);
 
