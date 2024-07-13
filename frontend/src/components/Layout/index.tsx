@@ -8,12 +8,11 @@ interface LayoutProps {
 
 function Layout({ children }: LayoutProps) {
 	return (
-		<div className="flex h-screen w-screen flex-1 bg-Black text-White">
-			{/* <Sidebar /> */}
-			<div className="flex min-w-96 flex-[6_2_0%] flex-col">
+		<div className="flex h-screen w-screen flex-col bg-Black text-White">
+			<div className="flex flex-1">
 				<Header />
-				<div className="flex flex-[7_2_0%]">{children}</div>
 			</div>
+			<div className="flex flex-[7_2_0%]">{children}</div>
 		</div>
 	);
 }
