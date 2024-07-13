@@ -53,18 +53,6 @@ export default function Test({ masterNode, masterNodeBalance, relatedAvatars }: 
     }
   }, [isMasterNodeInitialized, arePeopleNodesInitialized, addPeopleNodesFromJSON]);
 
-  // Example of dynamic balance update for master node only
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBalance((prevBalance) => {
-        const newBalance = prevBalance + Math.random() * 10;
-        updateNodeBalance('master-node', newBalance);
-        return newBalance;
-      });
-    }, 5000); // Update balance every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [updateNodeBalance]);
 
   return (
     <div className="relative flex w-full flex-1 flex-col">
