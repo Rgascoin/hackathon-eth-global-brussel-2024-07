@@ -87,8 +87,8 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 edgeColor = 'orange';
                 newEdges.push({
                     id: `e-${sourceId}-to-${targetId}`,
-                    source: targetId,
-                    target: sourceId,
+                    source: sourceId,
+                    target: targetId,
                     type: 'straight',
                     style: { stroke: edgeColor, strokeWidth: 2 },
                     markerEnd: 'url(#arrowhead)',

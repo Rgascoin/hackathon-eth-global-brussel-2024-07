@@ -46,7 +46,7 @@ const PeopleNode: React.FC<PeopleNodeProps> = ({ id, data }) => {
               <div className='flex items-center gap-4 rounded-lg bg-white p-4'>
                 <div className="flex-1">
                   <p className="font-semibold text-gray-700">Balance</p>
-                  <p className="text-sm text-gray-500">{data.balance.toFixed(2)} Circle</p>
+                  <p className="text-sm text-gray-500">{data?.balance?.toFixed(2) || 0} Circle</p>
                 </div>
               </div>
             </div>
