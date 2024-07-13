@@ -1,6 +1,8 @@
 'use client';
 
+import { ChainConfig, Sdk, SdkContractRunner } from '@circles-sdk/sdk';
 import { CHAIN_NAMESPACES } from '@web3auth/base';
+import { ContractRunner, ethers } from 'ethers';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import Web3AuthService from '@/services/web3Auth';
@@ -23,10 +25,19 @@ const CHAIN_CONFIG = {
 	logo: 'https://images.toruswallet.io/dai.svg',
 };
 
+const circlesChainConfig: ChainConfig = {
+	circlesRpcUrl: 'https://chiado-rpc.aboutcircles.com',
+	v1HubAddress: '0xdbf22d4e8962db3b2f1d9ff55be728a887e47710',
+	v2HubAddress: '0x2066CDA98F98397185483aaB26A89445addD6740',
+	migrationAddress: '0x2A545B54bb456A0189EbC53ed7090BfFc4a6Af94',
+};
+
 interface IWalletContext {
 	account: SetStateContext<string>;
 	isLogged: SetStateContext<boolean>;
 	web3Service: Web3AuthService;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	circlesSdk: any;
 }
 
 const WalletContext = createContext<IWalletContext>({
@@ -37,6 +48,7 @@ const WalletContext = createContext<IWalletContext>({
 		value: false,
 	},
 	web3Service: new Web3AuthService(CLIENT_ID, CHAIN_CONFIG),
+	circlesSdk: undefined,
 });
 
 export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -44,6 +56,18 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 	const [isLogged, setIsLogged] = useState<boolean>(false);
 
 	const [web3Service] = useState(() => new Web3AuthService(CLIENT_ID, CHAIN_CONFIG));
+	const [circlesSdk, setCirclesSDK] = useState<unknown>(undefined);
+
+	// GET A CIRCLE RUNNER
+	async function getRunner(): Promise<SdkContractRunner> {
+		const web3authProvider = web3Service.web3;
+
+		const ethersProvider = new ethers.BrowserProvider(web3authProvider?.provider as any);
+		const signer = await ethersProvider.getSigner();
+		const address = await signer.getAddress();
+
+		return { runner: signer, address };
+	}
 
 	useEffect(() => {
 		const init = async () => {
@@ -71,6 +95,18 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 		handleLogin();
 	}, [web3Service]);
 
+	// Instantiate Circles SDK
+	useEffect(() => {
+		if (!isLogged || !!circlesSdk) return;
+		const initSDK = async () => {
+			const runner = await getRunner();
+			const newSDK = new Sdk(circlesChainConfig, runner);
+			setCirclesSDK(newSDK);
+		};
+
+		initSDK();
+	}, [isLogged, circlesSdk, getRunner]);
+
 	return (
 		<WalletContext.Provider
 			value={{
@@ -83,6 +119,7 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 					setValue: setIsLogged,
 				},
 				web3Service,
+				circlesSdk,
 			}}
 		>
 			{children}

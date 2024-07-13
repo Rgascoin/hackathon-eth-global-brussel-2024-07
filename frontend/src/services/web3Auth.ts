@@ -9,8 +9,6 @@ export default class Web3AuthService {
 
 	public web3: Web3 | null = null;
 
-	public provider?: IProvider;
-
 	constructor(
 		private clientId: string,
 		private chainConfig: CustomChainConfig,
@@ -51,8 +49,6 @@ export default class Web3AuthService {
 	async login() {
 		try {
 			const provider = await this.web3Auth.connect();
-			console.log('ici', provider);
-			if (provider) this.provider = provider;
 
 			return this.web3Auth.connected;
 		} catch (error) {
