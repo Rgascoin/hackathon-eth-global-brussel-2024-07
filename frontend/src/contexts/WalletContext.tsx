@@ -4,6 +4,7 @@ import { CHAIN_NAMESPACES } from '@web3auth/base';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import Web3AuthService from '@/services/web3Auth';
+import { getKey, storeKey } from '@/utils/api-redis';
 
 interface SetStateContext<T> {
 	value: T;
@@ -56,6 +57,11 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 			setIsLogged(isConnected);
 			if (isConnected) {
 				const c = await web3Service.getAccounts();
+
+				// create new account if there is not already one
+				const redisAccount = await getKey(c[0]);
+				if (redisAccount.error) await storeKey(c[0], {});
+
 				if (setAccount) {
 					setAccount(c[0]);
 				}

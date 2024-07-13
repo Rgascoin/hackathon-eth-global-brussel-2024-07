@@ -18,6 +18,8 @@ function WalletButon() {
 	// }
 
 	const handleBalance = async () => {
+		if (!isLogged || !account || !web3Service) return;
+
 		const b = await web3Service.getBalance();
 		setBalance(b);
 		// uiConsole(ok);
