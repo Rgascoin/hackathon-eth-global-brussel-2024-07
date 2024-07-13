@@ -46,6 +46,7 @@
     "react-icons": "^5.1.0",
     "react-monaco-editor": "^0.55.0",
     "react-query": "^3.39.3",
+    "react-responsive": "^10.0.0",
     "react-toastify": "^10.0.5",
     "redis": "^4.6.15",
     "solc": "^0.8.25",
