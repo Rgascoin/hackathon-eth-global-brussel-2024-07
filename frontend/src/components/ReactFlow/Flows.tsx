@@ -13,6 +13,8 @@ function Flows() {
 	const [myBalance, setMyBalance] = useState<unknown>('none');
 	const [myRelation, setMyRelation] = useState<unknown>('none');
 
+	const [firstFetch, setFirstFetch] = useState<boolean>(false);
+
 	const fetchMyAvatar = async (): Promise<any> => {
 		if (!account.value || !circlesSdk) return undefined;
 
@@ -40,6 +42,7 @@ function Flows() {
 	// FETCH AVATAR EVERY X SECONDS (actualize on successful transaction)
 	useEffect(() => {
 		if (!circlesSdk || !account.value || account.value.length < 16) return undefined;
+		if (!firstFetch) {fetchMyAvatar(); setFirstFetch(true)}
 
 		const interval = setInterval(async () => {
 			if (!circlesSdk || !account.value || account.value.length < 16) return undefined;
