@@ -17,9 +17,6 @@ function Header() {
 				<div className="flex  ">
 					<p className="text-xs text-secondGrey">Hi, {account.value}</p>
 				</div>
-				<div className="flex">
-					<h2 className="text-2xl font-bold text-White">Welcome Back</h2>
-				</div>
 			</div>
 			<div className="m-2 flex max-h-24 flex-1 overflow-y-auto ">
 				{/* DEBUG UiConsole */}

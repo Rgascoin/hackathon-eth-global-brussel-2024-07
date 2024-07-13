@@ -22,10 +22,14 @@ function Flows() {
 
 		const relationsWithBalances = [];
 		for (const relation of relations) {
+			try {
 			const relationAvatarAddress = relations.subjectAvatar === avatar.address ? relation.subjectAvatar : relation.objectAvatar
 			const relationAvatar = await circlesSdk.getAvatar(relationAvatarAddress);
 			const relationBalance = await relationAvatar.getTotalBalance();
 			relationsWithBalances.push({...relation, balance: relationBalance})
+				} catch {
+				relationsWithBalances.push({...relation, balance: 0})
+			}
 		}
 		setMyAvatar(avatar);
 		setMyRelation(relationsWithBalances);
