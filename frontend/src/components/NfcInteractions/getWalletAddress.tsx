@@ -12,15 +12,19 @@ const GetWalletAddress = () => {
 	const scan = async () => {
 		const res = await callWristband('get_pkeys');
 		const personalStorage = await getKey(account.value);
+
 		if (!personalStorage.error)
 			await storeKey(account.value, { ...personalStorage.value, wristBandAddress: res.etherAddresses['1'] });
 		else await storeKey(account.value, { wristBandAddress: res.etherAddresses['1'] });
+		await setKey();
 	};
 
 	const setKey = async () => {
 		const personalStorage = await getKey(account.value);
-		const data = personalStorage.value.wristBandAddress;
-		setRedisData(`${data.slice(0, 6)}...${data.slice(-4)}`)
+		if (personalStorage.value && !personalStorage.error) {
+			const data = personalStorage.value.wristBandAddress;
+			setRedisData(`${data.slice(0, 6)}...${data.slice(-4)}`)
+		}
 	}
 
 	useEffect(() => {
@@ -32,7 +36,7 @@ const GetWalletAddress = () => {
 	return (
 		<div className={'p-3'}>
 		{account.value ? <div className={'flex flex-col space-y-2 text-center'}>
-			{!redisData ? <button onClick={scan}>Register Personal Address</button> :
+			{!redisData ? <button onClick={scan} className=" rounded-lg bg-grey p-2 transition-all duration-150 ease-in-out hover:bg-secondGrey">Register Personal Address</button> :
 				<button onClick={scan}>your wristband: {redisData}</button>}
 
 		</div> : <></>}

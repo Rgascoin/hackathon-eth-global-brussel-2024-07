@@ -69,7 +69,7 @@ function Flows() {
 				</>
 			) : (
 				<>
-					<div className="flex size-full flex-col gap-12 bg-red-500">Please login</div>
+					<div className="flex size-full flex-col gap-12 text-center">--Please login--</div>
 				</>
 			)}
 		</div>
